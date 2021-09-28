@@ -23,7 +23,7 @@ export const Calculator: FC = () => {
 
     /*
     Had to use a non-null assertion here because TS couldn't figure out that
-    I was checking for null integer values with a custom function on line 21
+    I was checking for null integer values with a custom function on line 19
     */
     const result = evaluateCalculation(firstValue!, operator, secondValue!);
     const formattedResult = result < 0 && isRomanNumeralMode ? 0 : result; // Roman numeral mode can't handle negative numbers
