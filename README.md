@@ -10,6 +10,13 @@ A user interacts with the calculator by entering a first number, an operator, an
 
 To clear the calculator and start over, the user can click the `C` button.
 
+## Installation and Usage
+
+1. Clone the repo (https://github.com/chrishuman0923/react_calculator.git)
+2. Run `npm install`
+3. Run `npm start`
+4. View the app in your browser at http://localhost:3000
+
 ## Tech Stack
 
 This calculator was designed using the following:
