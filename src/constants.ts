@@ -34,7 +34,7 @@ export const calculatorButtons: Button[] = [
 
 export const positiveOverflowValue = 10000;
 export const negativeOverflowValue = -10000;
-export const overflowMsg = 'Overflow';
+export const overflowErrorMsg = 'Overflow';
 
 export const romanNumeralMap: Record<string, number> = {
   M: 1000,

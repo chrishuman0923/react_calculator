@@ -29,13 +29,18 @@
     .button {
       width: 100%;
       margin: auto;
-      padding: 16px;
-      font-size: 24px;
+      padding: 12px;
+      font-size: 16px;
       cursor: pointer;
+
+      &:hover {
+        background-color: darken($color: #efefef, $amount: 10);
+        font-weight: bold;
+      }
     }
 
     .button.disabled {
-      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 }

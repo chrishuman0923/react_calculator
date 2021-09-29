@@ -1,12 +1,12 @@
 import classnames from 'classnames';
 import { FC, useReducer } from 'react';
 
-import { calculatorButtons, Operators, overflowMsg } from '../../constants';
+import { calculatorButtons, negativeOverflowValue, Operators, overflowErrorMsg, positiveOverflowValue } from '../../constants';
 import {
   calculatorInitialState,
   calculatorReducer,
   convertToRomanNumeral,
-  doesIntExist,
+  doesIntValueExist,
   evaluateCalculation,
 } from './Calculator.helpers';
 import './Calculator.styles.scss';
@@ -16,19 +16,20 @@ export const Calculator: FC = () => {
   const { displayValue, firstValue, isRomanNumeralMode, operator, secondValue } = state;
 
   const handleEvaluation = () => {
-    if (!doesIntExist(firstValue) || !doesIntExist(secondValue) || !operator) {
+    if (!doesIntValueExist(firstValue) || !doesIntValueExist(secondValue) || !operator) {
       console.error('Invalid calculation');
       return;
     }
 
     /*
-    Had to use a non-null assertion here because TS couldn't figure out that
-    I was checking for null integer values with a custom function on line 19
+      Had to use a non-null assertion here because TS couldn't figure out that
+      I was checking for null integer values with a custom function on line 19
     */
     const result = evaluateCalculation(firstValue!, operator, secondValue!);
+    const isOverflowed = result > positiveOverflowValue || result < negativeOverflowValue;
     const formattedResult = result < 0 && isRomanNumeralMode ? 0 : result; // Roman numeral mode can't handle negative numbers
 
-    dispatch({ name: 'setDisplayValue', payload: formattedResult });
+    dispatch({ name: 'setDisplayValue', payload: isOverflowed ? overflowErrorMsg : formattedResult.toString() });
     dispatch({ name: 'setFirstValue', payload: formattedResult });
     return;
   };
@@ -45,7 +46,7 @@ export const Calculator: FC = () => {
       const formattedInt = concatenatedInt.replace(/^0+/, ''); // Remove leading zeros
 
       dispatch({ name: 'setFirstValue', payload: Number(formattedInt) });
-      dispatch({ name: 'setDisplayValue', payload: Number(formattedInt) });
+      dispatch({ name: 'setDisplayValue', payload: formattedInt });
       return;
     }
 
@@ -54,7 +55,7 @@ export const Calculator: FC = () => {
     const formattedInt = concatenatedInt.replace(/^0+/, ''); // Remove leading zeros
 
     dispatch({ name: 'setSecondValue', payload: Number(formattedInt) });
-    dispatch({ name: 'setDisplayValue', payload: Number(formattedInt) });
+    dispatch({ name: 'setDisplayValue', payload: formattedInt });
   };
 
   const handleButtonClick = (value: keyof typeof Operators | number): void => {
@@ -70,12 +71,12 @@ export const Calculator: FC = () => {
   };
 
   const sortedCalculatorButtons = calculatorButtons.sort((a, b) => a.position - b.position);
-  const formattedDisplayValue =
-    displayValue === overflowMsg || !displayValue
-      ? displayValue
-      : isRomanNumeralMode
-      ? convertToRomanNumeral(Number(displayValue))
-      : Intl.NumberFormat().format(Number(displayValue));
+  const displayValueAsNumber = Number(displayValue);
+  const formattedDisplayValue = isNaN(displayValueAsNumber)
+    ? displayValue
+    : isRomanNumeralMode
+    ? convertToRomanNumeral(displayValueAsNumber)
+    : Intl.NumberFormat().format(displayValueAsNumber);
 
   return (
     <div className='calculator'>
@@ -91,7 +92,7 @@ export const Calculator: FC = () => {
           const isClearButton = value === 'clear';
           const isNumberButton = typeof value === 'number';
           const formattedLabel = isNumberButton ? (isRomanNumeralMode ? convertToRomanNumeral(Number(label)) : label) : label;
-          const isDisabled = !isClearButton && displayValue === overflowMsg;
+          const isDisabled = !isClearButton && displayValue === overflowErrorMsg;
 
           return (
             <button
