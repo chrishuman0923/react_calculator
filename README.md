@@ -4,6 +4,10 @@
 
 The purpose of this repo is to demonstrate a functioning calculator that can toggle between standard numbers and roman numerals.
 
+## Preview
+
+The app is running live on Heroku and can be found [here](http://react-ts-calculator.herokuapp.com).
+
 ## Functionality
 
 A user interacts with the calculator by entering a first number, an operator, and then a second number. Once that is done, they can click the `=` button to view the result. At any time, the user can toggle between `standard number` mode and `roman numeral` mode using the checkbox at the top of the screen.
@@ -25,6 +29,8 @@ This calculator was designed using the following:
 - React.js
 - Typescript
 - SCSS
+- Heroku
+- Github Actions
 
 ## Notes
 
